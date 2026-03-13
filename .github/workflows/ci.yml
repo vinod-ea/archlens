@@ -36,7 +36,7 @@ jobs:
         run: cd client && npm ci
 
       - name: Lint client
-        run: cd client && npx eslint src --ext .js,.jsx --max-warnings 20
+        run: cd client && npm run lint
 
       - name: Build React client
         run: cd client && npm run build

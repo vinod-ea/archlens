@@ -1,12 +1,20 @@
+name: CI
 
-cancel-in-progress: true
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
 
 permissions:
   contents: read
   packages: write
 
 jobs:
-  # ── Lint & Test ─────────────────────────────────────────────────────────────
   test:
     name: Lint & Test
     runs-on: ubuntu-latest
@@ -49,7 +57,6 @@ jobs:
           DB_TYPE: sqlite
           DB_PATH: /tmp/test-archlens.db
 
-  # ── Docker Build & Push ─────────────────────────────────────────────────────
   docker-build:
     name: Docker Build & Push
     runs-on: ubuntu-latest

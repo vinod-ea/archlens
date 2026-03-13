@@ -43,12 +43,12 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       # Optionally publish to Docker Hub (set DOCKERHUB_USERNAME + DOCKERHUB_TOKEN secrets)
-      - name: Log in to Docker Hub
-        if: ${{ secrets.DOCKERHUB_USERNAME != '' }}
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - - name: Log in to Docker Hub
+      - if: ${{ vars.DOCKERHUB_USERNAME != '' }}
+      - uses: docker/login-action@v3
+      - with:
+      - username: ${{ vars.DOCKERHUB_USERNAME }}
+      - password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Docker image metadata
         id: docker_meta
@@ -56,7 +56,6 @@ jobs:
         with:
           images: |
             ghcr.io/${{ github.repository_owner }}/archlens
-            ${{ secrets.DOCKERHUB_USERNAME != '' && format('{0}/archlens', secrets.DOCKERHUB_USERNAME) || '' }}
           tags: |
             # Keep the git tag (e.g. v3.0.0) as an image tag for copy/paste docs.
             type=ref,event=tag

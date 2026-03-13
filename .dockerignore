@@ -1,0 +1,51 @@
+# ─────────────────────────────────────────────────────────────────────────────
+#  .dockerignore — excluded from Docker build context
+# ─────────────────────────────────────────────────────────────────────────────
+
+# Dependencies (installed fresh in builder stage)
+node_modules
+client/node_modules
+
+# React dev build artifacts
+client/build
+
+# Local database files
+*.db
+*.db-shm
+*.db-wal
+data/
+
+# Environment files (never bake secrets into images)
+.env
+.env.local
+.env.*.local
+
+# Version control
+.git
+.gitignore
+
+# Editor / OS
+.DS_Store
+.idea
+.vscode
+*.swp
+*.swo
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+
+# Test output
+coverage/
+client/coverage/
+
+# CI / docs that don't belong in the image
+.github/
+docs/
+*.md
+!README.md
+
+# Docker files themselves
+Dockerfile*
+docker-compose*

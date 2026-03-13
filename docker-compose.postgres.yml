@@ -1,0 +1,45 @@
+# ─────────────────────────────────────────────────────────────────────────────
+#  docker-compose.postgres.yml
+#
+#  Extends docker-compose.yml with a bundled PostgreSQL database.
+#  Use for team deployments where you want a proper RDBMS.
+#
+#  Usage:
+#    docker compose -f docker-compose.yml -f docker-compose.postgres.yml up -d
+# ─────────────────────────────────────────────────────────────────────────────
+
+services:
+
+  archlens:
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DB_TYPE: postgres
+      PG_HOST: postgres
+      PG_PORT: 5432
+      PG_USER: ${PG_USER:-archlens}
+      PG_PASSWORD: ${PG_PASSWORD:-changeme}
+      PG_DATABASE: ${PG_DATABASE:-archlens}
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: archlens-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${PG_USER:-archlens}
+      POSTGRES_PASSWORD: ${PG_PASSWORD:-changeme}
+      POSTGRES_DB: ${PG_DATABASE:-archlens}
+    volumes:
+      - archlens-postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${PG_USER:-archlens}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    labels:
+      - "com.archlens.description=ArchLens PostgreSQL database"
+
+volumes:
+  archlens-postgres:
+    driver: local

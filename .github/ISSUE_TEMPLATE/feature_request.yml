@@ -1,0 +1,50 @@
+name: Feature Request
+description: Suggest a new feature or improvement
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Have an idea that would make ArchLens better? We'd love to hear it.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem does this solve?
+      description: Describe the EA workflow pain point or gap this addresses
+      placeholder: "When I do X in LeanIX, I can't easily Y because..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed solution
+      description: Describe what you'd like to see
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Which area of ArchLens does this relate to?
+      multiple: true
+      options:
+        - Vendor Analysis
+        - Vendor Resolution
+        - Duplicate Detection
+        - Fact Sheet Intelligence
+        - Architecture AI
+        - Quality Scoring
+        - Data Sync / LeanIX Connection
+        - Settings / Configuration
+        - Docker / Deployment
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Have you tried any workarounds?

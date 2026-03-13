@@ -1,0 +1,61 @@
+# ─────────────────────────────────────────────────────────────────────────────
+#  ArchLens — Docker Compose
+#
+#  Quick start:
+#    docker compose up -d
+#    open http://localhost:3000
+#
+#  With custom env:
+#    cp .env.example .env   # edit AI_API_KEY etc.
+#    docker compose up -d
+# ─────────────────────────────────────────────────────────────────────────────
+
+services:
+
+  archlens:
+    # Default: pull the published image from GHCR.
+    # Override with ARCHLENS_IMAGE=... (e.g. pin a version tag, or use a local image).
+    image: ${ARCHLENS_IMAGE:-ghcr.io/vinod-ea/archlens:latest}
+    # Or build locally from source:
+    # build: .
+    container_name: archlens
+    restart: unless-stopped
+    ports:
+      - "${PORT:-3000}:3000"
+    volumes:
+      - archlens-data:/app/data
+    environment:
+      # Server
+      NODE_ENV: production
+      PORT: 3000
+      # Database — SQLite default (zero config). Switch to mysql/postgres if needed.
+      DB_TYPE: ${DB_TYPE:-sqlite}
+      # AI Provider (claude | openai | deepseek | gemini)
+      AI_PROVIDER: ${AI_PROVIDER:-claude}
+      AI_API_KEY: ${AI_API_KEY:-}
+      # Optional: MySQL/PostgreSQL overrides
+      MYSQL_HOST:     ${MYSQL_HOST:-}
+      MYSQL_PORT:     ${MYSQL_PORT:-3306}
+      MYSQL_USER:     ${MYSQL_USER:-archlens}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-archlens}
+      PG_HOST:        ${PG_HOST:-}
+      PG_PORT:        ${PG_PORT:-5432}
+      PG_USER:        ${PG_USER:-archlens}
+      PG_PASSWORD:    ${PG_PASSWORD:-}
+      PG_DATABASE:    ${PG_DATABASE:-archlens}
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+    labels:
+      - "com.archlens.description=EA Intelligence Platform"
+      - "com.archlens.version=3.0.0"
+
+volumes:
+  archlens-data:
+    driver: local
+    labels:
+      - "com.archlens.description=ArchLens persistent data (SQLite DB)"
